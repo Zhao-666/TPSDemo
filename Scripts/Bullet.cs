@@ -32,11 +32,16 @@ public class Bullet : MonoBehaviour
         _moveDirection = direction;
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (col.gameObject.layer == LayerMask.NameToLayer("Bound"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Bound"))
         {
             //子弹碰到墙壁
+            Destroy(gameObject);
+        }
+        else if (other.CompareTag("Monster"))
+        {
+            other.GetComponent<Monster>().Hit();
             Destroy(gameObject);
         }
     }
