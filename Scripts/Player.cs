@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     private bool _inputJump;
     private bool _moving;
     private bool _isGrounded;
+    private Vector2 _forwardDirection = Vector2.right;
     private Vector2 _playerSize;
 
     //地面检测盒子
@@ -99,7 +100,8 @@ public class Player : MonoBehaviour
         if (_lastFireTime + _fireInterval < currentTime)
         {
             _lastFireTime = currentTime;
-            Instantiate(prefabBullet, _transform.position, Quaternion.identity);
+            var bullet = Instantiate(prefabBullet, _transform.position, Quaternion.identity);
+            bullet.GetComponent<Bullet>().Init(_forwardDirection);
         }
     }
 
@@ -155,7 +157,16 @@ public class Player : MonoBehaviour
             {
                 _moving = true;
                 _animator.SetBool(Run, true);
-                _transform.eulerAngles = _inputX > 0 ? Positive : Negative;
+                if (_inputX > 0)
+                {
+                    _transform.eulerAngles = Positive;
+                    _forwardDirection = Vector2.right;
+                }
+                else
+                {
+                    _transform.eulerAngles = Negative;
+                    _forwardDirection = Vector2.left;
+                }
             }
         }
         else if (_moving)
