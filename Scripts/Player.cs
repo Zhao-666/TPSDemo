@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class Player : MonoBehaviour
 {
     private static readonly int Run = Animator.StringToHash("run");
     private static readonly Vector3 Positive = Vector3.zero;
@@ -13,29 +13,55 @@ public class PlayerController : MonoBehaviour
 
     [Header("跳跃力度"), SerializeField]
     //
-    private float jumpForce = 8f;
+    private float jumpForce = 5f;
 
     [Header("下降重力"), SerializeField]
     //
-    private float fallMultiplier = 5f;
-    
+    private float fallMultiplier = 2.5f;
+
     [Header("小跳重力"), SerializeField]
     //
-    private float lowJumpMultiplier = 3f;
+    private float lowJumpMultiplier = 2f;
+
+    [Header("地面Layer"), SerializeField]
+    //
+    private LayerMask groundLayerMask;
+
+    [Header("子弹预制体"), SerializeField]
+    //
+    private GameObject prefabBullet;
 
     private Transform _transform;
     private Animator _animator;
     private Rigidbody2D _rigidbody2D;
+    private SpriteRenderer _spriteRenderer;
 
     private float _inputX;
     private bool _inputJump;
     private bool _moving;
+    private bool _isGrounded;
+    private Vector2 _playerSize;
+
+    //地面检测盒子
+    private float _checkBoxHeight = 0.2f;
+    private Vector2 _checkBoxSize;
+
+    //射击相关
+    private float _fireInterval = 0.5f;
+    private float _lastFireTime;
 
     void Awake()
     {
         _transform = transform;
         _animator = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    void Start()
+    {
+        _playerSize = _spriteRenderer.bounds.size;
+        _checkBoxSize = new Vector2(_playerSize.x * 0.8f, _checkBoxHeight);
     }
 
     void Update()
@@ -46,12 +72,35 @@ public class PlayerController : MonoBehaviour
             _inputJump = true;
         }
 
+        if (Input.GetButton("Fire1"))
+        {
+            _Fire();
+        }
+
         _Move();
     }
 
     private void FixedUpdate()
     {
         _Jump();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = _isGrounded ? Color.green : Color.red;
+
+        var checkBoxCenter = (Vector2) _transform.position - (Vector2.up * _playerSize.y * 0.5f);
+        Gizmos.DrawWireCube(checkBoxCenter, _checkBoxSize);
+    }
+
+    private void _Fire()
+    {
+        var currentTime = Time.time;
+        if (_lastFireTime + _fireInterval < currentTime)
+        {
+            _lastFireTime = currentTime;
+            Instantiate(prefabBullet, _transform.position, Quaternion.identity);
+        }
     }
 
     private void _Jump()
@@ -71,10 +120,28 @@ public class PlayerController : MonoBehaviour
             _rigidbody2D.gravityScale = 1f;
         }
 
-        if (_inputJump)
+        if (_inputJump && _isGrounded)
         {
             _rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _inputJump = false;
+            _isGrounded = false;
+        }
+        else
+        {
+            _CheckPlayerIsGrounded();
+        }
+    }
+
+    private void _CheckPlayerIsGrounded()
+    {
+        var checkBoxCenter = (Vector2) _transform.position - (Vector2.up * _playerSize.y * 0.5f);
+        if (Physics2D.OverlapBox(checkBoxCenter, _checkBoxSize, 0, groundLayerMask))
+        {
+            _isGrounded = true;
+        }
+        else
+        {
+            _isGrounded = false;
         }
     }
 
