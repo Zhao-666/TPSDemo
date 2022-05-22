@@ -30,6 +30,16 @@ public class Player : MonoBehaviour
     [Header("子弹预制体"), SerializeField]
     //
     private GameObject prefabBullet;
+    
+    [Header("音频组件")]
+    //
+    public AudioSource mainAudioSource;
+
+    [Header("音频")]
+    //
+    public AudioClip jumpClip;
+
+    public AudioClip shootClip;
 
     private Transform _transform;
     private Animator _animator;
@@ -102,6 +112,9 @@ public class Player : MonoBehaviour
             _lastFireTime = currentTime;
             var bullet = Instantiate(prefabBullet, _transform.position, Quaternion.identity);
             bullet.GetComponent<Bullet>().Init(_forwardDirection);
+            
+            mainAudioSource.clip = shootClip;
+            mainAudioSource.Play();
         }
     }
 
@@ -127,6 +140,9 @@ public class Player : MonoBehaviour
             _rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             _inputJump = false;
             _isGrounded = false;
+            
+            mainAudioSource.clip = jumpClip;
+            mainAudioSource.Play();
         }
         else
         {

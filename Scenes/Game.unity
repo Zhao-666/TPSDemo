@@ -8442,7 +8442,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 756739989425925061, guid: d457ef3f94a6a864dadc8894d3759fa3, type: 3}
   m_PrefabInstance: {fileID: 756739988371691470}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &1126890514
+--- !u!82 &1126890508
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8452,7 +8452,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 66b029990c9cb66439d01d105b464bc1, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -8538,6 +8538,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &1126890514 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1126890514, guid: d457ef3f94a6a864dadc8894d3759fa3, type: 3}
+  m_PrefabInstance: {fileID: 756739988371691470}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1533306641
 GameObject:
   m_ObjectHideFlags: 0
@@ -9910,5 +9915,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 756739989425925087, guid: d457ef3f94a6a864dadc8894d3759fa3, type: 3}
+      propertyPath: shootClip
+      value: 
+      objectReference: {fileID: 8300000, guid: cfe97494bbe0632408e8476dc3ed1610, type: 3}
+    - target: {fileID: 756739989425925087, guid: d457ef3f94a6a864dadc8894d3759fa3, type: 3}
+      propertyPath: shootAudioSource
+      value: 
+      objectReference: {fileID: 1126890514}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d457ef3f94a6a864dadc8894d3759fa3, type: 3}
