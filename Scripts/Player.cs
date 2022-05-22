@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
     private Vector2 _checkBoxSize;
 
     //射击相关
-    private float _fireInterval = 0.5f;
+    private float _fireInterval = 0.3f;
     private float _lastFireTime;
 
     void Awake()

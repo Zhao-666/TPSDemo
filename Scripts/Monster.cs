@@ -19,6 +19,7 @@ public class Monster : MonoBehaviour
 
     private Transform _playerTransform;
 
+    private bool _StartMove;
     private bool _isHit;
 
     void Awake()
@@ -60,11 +61,19 @@ public class Monster : MonoBehaviour
 
     private void _Move()
     {
-        if (_isHit)
+        if (!_StartMove || _isHit)
         {
             return;
         }
-        _CheckPlayerDirection();
+
+        var heightDiff = Math.Abs(_transform.position.y - _playerTransform.position.y);
+
+        if (heightDiff < 1)
+        {
+            //在同一平面
+            _CheckPlayerDirection();
+        }
+
         _transform.Translate(new Vector3(moveSpeed * Time.deltaTime, 0, 0));
     }
 
@@ -80,11 +89,21 @@ public class Monster : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.layer == LayerMask.NameToLayer("Bound")
+            || col.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            _CheckPlayerDirection();
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Bound"))
         {
             _collider2D.isTrigger = false;
+            _StartMove = true;
         }
     }
 }

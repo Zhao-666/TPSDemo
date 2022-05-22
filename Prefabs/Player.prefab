@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  jumpForce: 8
+  jumpForce: 9
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
   groundLayerMask:
