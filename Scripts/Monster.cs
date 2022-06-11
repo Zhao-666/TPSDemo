@@ -5,21 +5,23 @@ public class Monster : MonoBehaviour
 {
     private static readonly Vector3 Positive = Vector3.zero;
     private static readonly Vector3 Negative = new Vector3(0, 180, 0);
-    private static readonly int HitAnim = Animator.StringToHash("Hit");
+    private static readonly int HitAnim = Animator.StringToHash("hit");
 
     [Header("移动速度"), SerializeField]
     //
     private float moveSpeed = 10f;
 
+    [Header("血量"), SerializeField]
+    //
+    private float hp = 1f;
+
     private Transform _transform;
     private Animator _animator;
     private CapsuleCollider2D _collider2D;
-    private Rigidbody2D _rigidbody2D;
-    private SpriteRenderer _spriteRenderer;
 
     private Transform _playerTransform;
 
-    private bool _StartMove;
+    private bool _startMove;
     private bool _isHit;
 
     void Awake()
@@ -27,8 +29,6 @@ public class Monster : MonoBehaviour
         _transform = transform;
         _animator = GetComponent<Animator>();
         _collider2D = GetComponent<CapsuleCollider2D>();
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
 
         _collider2D.isTrigger = true;
     }
@@ -48,7 +48,7 @@ public class Monster : MonoBehaviour
     public void Hit()
     {
         _isHit = true;
-        _animator.SetTrigger(HitAnim);
+        _animator.SetBool(HitAnim, true);
     }
 
     /// <summary>
@@ -56,12 +56,20 @@ public class Monster : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        Destroy(gameObject);
+        if (--hp == 0)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _isHit = false;
+            _animator.SetBool(HitAnim, false);
+        }
     }
 
     private void _Move()
     {
-        if (!_StartMove || _isHit)
+        if (!_startMove || _isHit)
         {
             return;
         }
@@ -103,7 +111,7 @@ public class Monster : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Bound"))
         {
             _collider2D.isTrigger = false;
-            _StartMove = true;
+            _startMove = true;
         }
     }
 }
