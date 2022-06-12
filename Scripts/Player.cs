@@ -5,6 +5,7 @@ public class Player : MonoBehaviour
 {
     private static readonly int Run = Animator.StringToHash("run");
     private static readonly int Jump = Animator.StringToHash("jump");
+    private static readonly int StickWall = Animator.StringToHash("stick_wall");
     private static readonly Vector3 Positive = Vector3.zero;
     private static readonly Vector3 Negative = new Vector3(0, 180, 0);
 
@@ -150,6 +151,10 @@ public class Player : MonoBehaviour
         {
             //下降中
             _rigidbody2D.gravityScale = fallMultiplier;
+            if (_isStickToWall)
+            {
+                _animator.SetBool(StickWall, true);
+            }
         }
         else if (_rigidbody2D.velocity.y > 0 && !Input.GetButton("Jump"))
         {
@@ -167,6 +172,7 @@ public class Player : MonoBehaviour
             _inputJump = false;
             _isGrounded = false;
             _animator.SetBool(Jump, true);
+            _animator.SetBool(StickWall, false);
 
             mainAudioSource.clip = jumpClip;
             mainAudioSource.Play();
@@ -186,6 +192,7 @@ public class Player : MonoBehaviour
             {
                 _isGrounded = true;
                 _animator.SetBool(Jump, false);
+                _animator.SetBool(StickWall, false);
             }
         }
         else
